@@ -14,6 +14,10 @@
         "quotes": [
             "error",
             "double"
+        ],
+        "import/extensions": [
+            "error",
+            "always"
         ]
     }
 }
