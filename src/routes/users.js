@@ -1,17 +1,11 @@
 import { Router } from "express";
-import database from "../database/index.js";
+import Users from "../services/Users.js";
 
 const userRoute = Router();
+const users = new Users();
 
-userRoute.get("/", async (req, res) => {
-  const users = await database("users").select();
+userRoute.get("/", users.getUsers);
 
-  res.status(200).json(users);
-});
-
-userRoute.post("/", async (req, res) => {
-  const user = await database("users").insert(req.body, "*");
-  res.status(201).json(user[0]);
-});
+userRoute.post("/", users.createUser);
 
 export default userRoute;
