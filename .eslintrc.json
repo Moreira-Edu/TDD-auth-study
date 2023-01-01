@@ -18,6 +18,7 @@
         "import/extensions": [
             "error",
             "always"
-        ]
+        ],
+        "no-console": "off"
     }
 }
