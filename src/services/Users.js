@@ -8,6 +8,7 @@ class Users {
   }
 
   async createUser(req, res) {
+    if (!req.body.name) res.status(400).json({ error: "Nome é um atributo obrigatório" });
     const user = await database("users").insert(req.body, "*");
     res.status(201).json(user[0]);
   }
