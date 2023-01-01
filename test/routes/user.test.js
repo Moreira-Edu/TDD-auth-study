@@ -16,4 +16,14 @@ describe("user route behavior", () => {
     expect(status).toBe(201);
     expect(body.name).toBe("Walter Sap");
   });
+
+  test("should not register a user without name", async () => {
+    const user = {
+      email: "email@email.com",
+      password: "1234oi",
+    };
+    const { status, body } = await agent.post("/users").send(user);
+    expect(status).toBe(400);
+    expect(body.error).toBe("Nome é um atributo obrigatório");
+  });
 });
