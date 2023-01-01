@@ -35,7 +35,7 @@ describe("user route behavior", () => {
       name: "John Doe",
       password: "122345",
     };
-    const { status, body } = await agent.post("users").send(user);
+    const { status, body } = await agent.post("/users").send(user);
 
     expect(status).toBe(400);
     expect(body.error).toBe("E-mail é um atributo obrigatório");

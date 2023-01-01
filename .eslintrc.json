@@ -20,6 +20,7 @@
             "always"
         ],
         "no-console": "off",
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "consistent-return": "off"
     }
 }
