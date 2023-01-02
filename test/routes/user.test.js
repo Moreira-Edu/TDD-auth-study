@@ -40,4 +40,15 @@ describe("user route behavior", () => {
     expect(status).toBe(400);
     expect(body.error).toBe("E-mail é um atributo obrigatório");
   });
+  test("should not register a user without password", async (done) => {
+    const user = {
+      name: "John Doe",
+      email: "doe@email.com",
+    };
+    const { status, body } = await agent.post("/users").send(user);
+
+    expect(status).toBe(400);
+    expect(body.error).toBe("Senha é um atributo obrigatório");
+    done();
+  });
 });
