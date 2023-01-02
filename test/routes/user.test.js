@@ -2,7 +2,10 @@ import supertest from "supertest";
 import app from "../../src/app.js";
 
 const agent = supertest(app);
+
 describe("user route behavior", () => {
+  const email = `${Date.now()}@email.com`;
+
   test("should list all users", async () => {
     const { body, status } = await agent.get("/users");
 
@@ -11,7 +14,6 @@ describe("user route behavior", () => {
   });
 
   test("should register a user successfully", async () => {
-    const email = `${Date.now()}@email.com`;
     const { status, body } = await agent.post("/users")
       .send({ name: "Walter Sap", email, password: "word@123" });
 
@@ -49,5 +51,16 @@ describe("user route behavior", () => {
 
     expect(status).toBe(400);
     expect(body.error).toBe("Senha é um atributo obrigatório");
+  });
+  test("should not register a user with a registered email", async () => {
+    const user = {
+      name: "John Doe",
+      email,
+      password: "2313@312321",
+    };
+    const { status, body } = await agent.post("/users").send(user);
+
+    expect(status).toBe(400);
+    expect(body.error).toBe("E-mail já cadastrado");
   });
 });

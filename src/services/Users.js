@@ -8,13 +8,14 @@ class Users {
   }
 
   async createUser(req, res) {
-    if (!req.body.name) {
+    const { name, email, password } = req.body;
+    if (!name) {
       return res.status(400).json({ error: "Nome é um atributo obrigatório" });
     }
-    if (!req.body.email) {
+    if (!email) {
       return res.status(400).json({ error: "E-mail é um atributo obrigatório" });
     }
-    if (!req.body.password) {
+    if (!password) {
       return res.status(400).json({ error: "Senha é um atributo obrigatório" });
     }
 
