@@ -14,6 +14,9 @@ class Users {
     if (!req.body.email) {
       return res.status(400).json({ error: "E-mail é um atributo obrigatório" });
     }
+    if (!req.body.password) {
+      return res.status(400).json({ error: "Senha é um atributo obrigatório" });
+    }
 
     const user = await database("users").insert(req.body, "*");
     return res.status(201).json(user[0]);
