@@ -19,6 +19,12 @@ class Users {
       return res.status(400).json({ error: "Senha é um atributo obrigatório" });
     }
 
+    const userExists = await database("users").where({ email }).select();
+
+    if (userExists && userExists.length > 0) {
+      return res.status(400).json({ error: "E-mail já cadastrado" });
+    }
+
     const user = await database("users").insert(req.body, "*");
     return res.status(201).json(user[0]);
   }
