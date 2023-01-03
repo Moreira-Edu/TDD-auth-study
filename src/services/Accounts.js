@@ -8,6 +8,12 @@ class Accounts {
 
     res.status(201).json(account[0]);
   }
+
+  async getAccounts(req, res) {
+    const accounts = await database("accounts").select();
+
+    res.status(200).json(accounts);
+  }
 }
 
 export default Accounts;
