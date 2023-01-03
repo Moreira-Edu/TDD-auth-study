@@ -27,4 +27,14 @@ describe("account route behavior", () => {
     expect(status).toBe(201);
     expect(body.name).toBe("Acc #1");
   });
+
+  test("should list all accounts", async () => {
+    await database("accounts")
+      .insert({ name: "Acc #2", user_id: user.id });
+
+    const { status, body } = await agent.get(BASE_URL);
+
+    expect(status).toBe(200);
+    expect(body.length).toBeGreaterThan(0);
+  });
 });
