@@ -15,7 +15,12 @@ class Accounts {
     res.status(200).json(accounts);
   }
 
- 
+  async getAccount(req, res) {
+    const { id } = req.params;
+    const accounts = await database("accounts").where({ id }).first();
+
+    res.status(200).json(accounts);
+  }
 }
 
 export default Accounts;
