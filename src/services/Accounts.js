@@ -14,6 +14,8 @@ class Accounts {
 
     res.status(200).json(accounts);
   }
+
+ 
 }
 
 export default Accounts;
