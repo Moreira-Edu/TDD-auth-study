@@ -33,6 +33,14 @@ class Accounts {
 
     res.status(200).json(account[0]);
   }
+
+  async deleteAccount(req, res) {
+    const { id } = req.params;
+
+    await database("accounts").where({ id }).delete();
+
+    res.status(204).send();
+  }
 }
 
 export default Accounts;
