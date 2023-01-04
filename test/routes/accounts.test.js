@@ -28,6 +28,16 @@ describe("account route behavior", () => {
     expect(body.name).toBe("Acc #1");
   });
 
+  test("should not register a new account without name", async () => {
+    const { status, body } = await agent.post(BASE_URL)
+      .send({ user_id: user.id });
+
+    expect(status).toBe(400);
+    expect(body.error).toBe("Nome é um atributo obrigatório");
+  });
+
+  test.todo("should not register a new account with duplicate name");
+
   test("should list all accounts", async () => {
     await database("accounts")
       .insert({ name: "Acc #2", user_id: user.id });
@@ -37,6 +47,8 @@ describe("account route behavior", () => {
     expect(status).toBe(200);
     expect(body.length).toBeGreaterThan(0);
   });
+
+  test.todo("should list only the account of the user");
 
   test("should get a list by ID", async () => {
     const acc = await database("accounts")
@@ -49,6 +61,8 @@ describe("account route behavior", () => {
     expect(body.user_id).toBe(user.id);
   });
 
+  test.todo("should not get an account of another user");
+
   test("should update an account", async () => {
     const acc = await database("accounts")
       .insert({ name: "Acc to update", user_id: user.id }, ["id"]);
@@ -59,6 +73,8 @@ describe("account route behavior", () => {
     expect(status).toBe(200);
     expect(body.name).toBe("Acc updated");
   });
+
+  test.todo("should not update an account of another user");
 
   test("should delete an account", async () => {
     const acc = await database("accounts")

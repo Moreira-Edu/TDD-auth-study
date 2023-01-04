@@ -4,6 +4,11 @@ import database from "../database/index.js";
 class Accounts {
   async createAccount(req, res) {
     const { name, user_id } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ error: "Nome é um atributo obrigatório" });
+    }
+
     const account = await database("accounts")
       .insert({ name, user_id }, "*");
 
