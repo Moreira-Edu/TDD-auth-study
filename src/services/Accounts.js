@@ -21,6 +21,16 @@ class Accounts {
 
     res.status(200).json(accounts);
   }
+
+  async updateAccount(req, res) {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    const account = await database("accounts")
+      .where({ id }).update({ name }, "*");
+
+    res.status(200).json(account[0]);
+  }
 }
 
 export default Accounts;

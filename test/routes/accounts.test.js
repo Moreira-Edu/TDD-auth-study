@@ -57,5 +57,5 @@ describe("account route behavior", () => {
 
     expect(status).toBe(200);
     expect(body.name).toBe("Acc updated");
-
   });
+});
