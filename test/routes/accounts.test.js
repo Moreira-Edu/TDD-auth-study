@@ -47,4 +47,15 @@ describe("account route behavior", () => {
     expect(body.name).toBe("Acc by id");
     expect(body.user_id).toBe(user.id);
   });
-});
+
+  test("should update an account", async () => {
+    const acc = await database("accounts")
+      .insert({ name: "Acc to update", user_id: user.id }, ["id"]);
+
+    const { status, body } = await agent.put(`${BASE_URL}/${acc[0].id}`)
+      .send({ name: "Acc updated" });
+
+    expect(status).toBe(200);
+    expect(body.name).toBe("Acc updated");
+
+  });
