@@ -41,6 +41,7 @@ describe("account route behavior", () => {
   test("should get a list by ID", async () => {
     const acc = await database("accounts")
       .insert({ name: "Acc by id", user_id: user.id }, ["id"]);
+
     const { status, body } = await agent.get(`${BASE_URL}/${acc[0].id}`);
 
     expect(status).toBe(200);
@@ -57,5 +58,14 @@ describe("account route behavior", () => {
 
     expect(status).toBe(200);
     expect(body.name).toBe("Acc updated");
+  });
+
+  test("should delete an account", async () => {
+    const acc = await database("accounts")
+      .insert({ name: "Acc to update", user_id: user.id }, ["id"]);
+
+    const { status } = await agent.delete(`${BASE_URL}/${acc[0].id}`);
+
+    expect(status).toBe(204);
   });
 });
