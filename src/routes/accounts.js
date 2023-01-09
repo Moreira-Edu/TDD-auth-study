@@ -1,13 +1,24 @@
 import { Router } from "express";
-import Accounts from "../services/Accounts.js";
+import {
+  CreateAccountController,
+  DeleteAccountController,
+  GetAccountController,
+  GetAccountsController,
+  UpdateAccountController,
+} from "../services/accounts/accountsServices.js";
 
 const accountRoutes = Router();
-const account = new Accounts();
+const createAccount = new CreateAccountController();
+const getAccounts = new GetAccountsController();
+const getAccount = new GetAccountController();
+const updateAccount = new UpdateAccountController();
+const deleteAccount = new DeleteAccountController();
 
-accountRoutes.post("/", account.createAccount);
-accountRoutes.get("/", account.getAccounts);
-accountRoutes.get("/:id", account.getAccount);
-accountRoutes.put("/:id", account.updateAccount);
-accountRoutes.delete("/:id", account.deleteAccount);
+accountRoutes
+  .post("/", createAccount.handle)
+  .get("/", getAccounts.handle)
+  .get("/:id", getAccount.handle)
+  .put("/:id", updateAccount.handle)
+  .delete("/:id", deleteAccount.handle);
 
 export default accountRoutes;
