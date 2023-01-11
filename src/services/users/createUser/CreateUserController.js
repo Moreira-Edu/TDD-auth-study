@@ -1,3 +1,4 @@
+import getHashPassword from "../../../utils/passwordHash/hashPassword.js";
 import UserValidation from "../../../utils/validation/usersValidation.js";
 import CreateUserUseCase from "./CreateUserUseCase.js";
 
@@ -12,7 +13,8 @@ class CreateUserController {
         name, email, password,
       });
 
-      const user = await createUser.execute({ name, email, password });
+      const hashPassword = getHashPassword(password);
+      const user = await createUser.execute({ name, email, password: hashPassword });
 
       return res.status(201).json(user[0]);
     } catch (error) {

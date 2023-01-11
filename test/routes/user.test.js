@@ -8,10 +8,17 @@ describe("user route behavior", () => {
 
   test("should register a user successfully", async () => {
     const { status, body } = await agent.post("/users")
-      .send({ name: "Walter Sap", email, password: "word@123" });
+      .send(
+        {
+          name: "Walter Sap",
+          email,
+          password: "word@123",
+        },
+      );
 
     expect(status).toBe(201);
     expect(body.name).toBe("Walter Sap");
+    expect(body).not.toHaveProperty("password");
   });
 
   test("should list all users", async () => {
@@ -19,6 +26,25 @@ describe("user route behavior", () => {
 
     expect(status).toBe(200);
     expect(body.length).toBeGreaterThan(0);
+  });
+
+  test("should store a encrypted password", async () => {
+    const { body, status } = await agent.post("/users")
+      .send(
+        {
+          name: "Walter ked",
+          email: `${Date.now()}@email.com`,
+          password: "12345",
+        },
+      );
+
+    expect(status).toBe(201);
+    const { id } = body;
+
+    const { body: { password } } = await agent.get(`/users/${id}`);
+
+    expect(password).not.toBeUndefined();
+    expect(password).not.toBe("12345");
   });
 
   test("should not register a user without name", async () => {

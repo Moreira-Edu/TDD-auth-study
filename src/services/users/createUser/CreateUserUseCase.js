@@ -11,7 +11,10 @@ class CreateUserUseCase {
     }
 
     const user = await database("users")
-      .insert({ name, email, password }, "*");
+      .insert(
+        { name, email, password },
+        ["id", "name", "email"],
+      );
 
     return user;
   }
