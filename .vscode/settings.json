@@ -5,5 +5,8 @@
     "finmanager",
     "knexfile",
     "obrigatório"
+  ],
+  "cSpell.ignoreWords": [
+    "signin"
   ]
 }

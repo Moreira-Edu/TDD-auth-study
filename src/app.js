@@ -4,10 +4,9 @@ import routes from "./routes/routes.js";
 
 const app = express();
 
-app.use(express.json()).use(routes)
-  .use(Error.handle)
-  .use("/", (req, res) => {
-    res.status(200).send();
-  });
+app
+  .use(express.json())
+  .use(routes)
+  .use(Error.handle);
 
 export default app;
