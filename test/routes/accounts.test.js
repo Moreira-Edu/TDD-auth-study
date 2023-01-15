@@ -51,7 +51,19 @@ describe("account route behavior", () => {
     expect(body.error).toBe("Nome é um atributo obrigatório");
   });
 
-  test.todo("should not register a new account with duplicate name");
+  test("should not register a new account with duplicate name",
+    async () => {
+      await database("accounts").insert(
+        { name: "duplicate name", user_id: user.id },
+      );
+
+      const { body, status } = await agent.post(BASE_URL)
+        .set("authorization", `bearer ${user.token}`)
+        .send({ name: "duplicate name" });
+
+      expect(status).toBe(400);
+      expect(body.error).toBe("Já existe uma conta com este nome");
+    });
 
   test("should list only the account of the user", async () => {
     await database("accounts").insert([

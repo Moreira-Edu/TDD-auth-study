@@ -1,3 +1,4 @@
+import AccountValidation from "../../../utils/validation/accountValidation.js";
 import CreateAccountUseCase from "./createAccountUseCase.js";
 
 class CreateAccountController {
@@ -5,8 +6,10 @@ class CreateAccountController {
     const { name } = req.body;
     const { id } = req.user;
     const createAccount = new CreateAccountUseCase();
+    const accountValidation = new AccountValidation();
 
     try {
+      await accountValidation.execute(name, id);
       const account = await createAccount
         .execute({ name, user_id: id });
 

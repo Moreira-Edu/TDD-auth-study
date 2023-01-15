@@ -9,7 +9,7 @@ class CreateUserController {
     const userValidation = new UserValidation();
 
     try {
-      userValidation.execute({
+      await userValidation.execute({
         name, email, password,
       });
 
