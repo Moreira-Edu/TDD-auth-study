@@ -9,8 +9,9 @@ const agent = supertest(app);
 describe("account route behavior", () => {
   const BASE_URL = "/accounts";
   let user;
+  let user2;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const result = await database("users").insert(
       {
         name: "User account",
@@ -19,16 +20,26 @@ describe("account route behavior", () => {
       }, "*",
     );
     user = { ...result[0] };
+    const result2 = await database("users").insert(
+      {
+        name: "User account 2",
+        email: `${Date.now()}@email.com`,
+        password: "12359@oi",
+      }, "*",
+    );
+
+    user = { ...result[0] };
     user.token = jwt.encode(user, process.env.SECRET);
+    user2 = { ...result2[0] };
   });
 
   test("should register a new account successfully", async () => {
     const { status, body } = await agent.post(BASE_URL)
       .set("authorization", `bearer ${user.token}`)
-      .send({ name: "Acc #1" });
+      .send({ name: "Acc user #1" });
 
     expect(status).toBe(201);
-    expect(body.name).toBe("Acc #1");
+    expect(body.name).toBe("Acc user #1");
   });
 
   test("should not register a new account without name", async () => {
@@ -42,18 +53,19 @@ describe("account route behavior", () => {
 
   test.todo("should not register a new account with duplicate name");
 
-  test("should list all accounts", async () => {
-    await database("accounts")
-      .insert({ name: "Acc #2", user_id: user.id });
+  test("should list only the account of the user", async () => {
+    await database("accounts").insert([
+      { name: "Acc user #1", user_id: user.id },
+      { name: "Acc user #2", user_id: user2.id },
+    ]);
 
     const { status, body } = await agent.get(BASE_URL)
       .set("authorization", `bearer ${user.token}`);
 
     expect(status).toBe(200);
-    expect(body.length).toBeGreaterThan(0);
+    expect(body.length).toBe(1);
+    expect(body[0].name).toBe("Acc user #1");
   });
-
-  test.todo("should list only the account of the user");
 
   test("should get a list by ID", async () => {
     const acc = await database("accounts")
