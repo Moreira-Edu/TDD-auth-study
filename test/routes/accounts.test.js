@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import supertest from "supertest";
+import jwt from "jwt-simple";
 import app from "../../src/app.js";
 import database from "../../src/database/index.js";
 
@@ -18,10 +19,12 @@ describe("account route behavior", () => {
       }, "*",
     );
     user = { ...result[0] };
+    user.token = jwt.encode(user, process.env.SECRET);
   });
 
   test("should register a new account successfully", async () => {
     const { status, body } = await agent.post(BASE_URL)
+      .set("authorization", `bearer ${user.token}`)
       .send({ name: "Acc #1", user_id: user.id });
 
     expect(status).toBe(201);
@@ -30,6 +33,7 @@ describe("account route behavior", () => {
 
   test("should not register a new account without name", async () => {
     const { status, body } = await agent.post(BASE_URL)
+      .set("authorization", `bearer ${user.token}`)
       .send({ user_id: user.id });
 
     expect(status).toBe(400);
@@ -42,7 +46,8 @@ describe("account route behavior", () => {
     await database("accounts")
       .insert({ name: "Acc #2", user_id: user.id });
 
-    const { status, body } = await agent.get(BASE_URL);
+    const { status, body } = await agent.get(BASE_URL)
+      .set("authorization", `bearer ${user.token}`);
 
     expect(status).toBe(200);
     expect(body.length).toBeGreaterThan(0);
@@ -54,7 +59,8 @@ describe("account route behavior", () => {
     const acc = await database("accounts")
       .insert({ name: "Acc by id", user_id: user.id }, ["id"]);
 
-    const { status, body } = await agent.get(`${BASE_URL}/${acc[0].id}`);
+    const { status, body } = await agent.get(`${BASE_URL}/${acc[0].id}`)
+      .set("authorization", `bearer ${user.token}`);
 
     expect(status).toBe(200);
     expect(body.name).toBe("Acc by id");
@@ -68,6 +74,7 @@ describe("account route behavior", () => {
       .insert({ name: "Acc to update", user_id: user.id }, ["id"]);
 
     const { status, body } = await agent.put(`${BASE_URL}/${acc[0].id}`)
+      .set("authorization", `bearer ${user.token}`)
       .send({ name: "Acc updated" });
 
     expect(status).toBe(200);
@@ -80,7 +87,8 @@ describe("account route behavior", () => {
     const acc = await database("accounts")
       .insert({ name: "Acc to update", user_id: user.id }, ["id"]);
 
-    const { status } = await agent.delete(`${BASE_URL}/${acc[0].id}`);
+    const { status } = await agent.delete(`${BASE_URL}/${acc[0].id}`)
+      .set("authorization", `bearer ${user.token}`);
 
     expect(status).toBe(204);
   });

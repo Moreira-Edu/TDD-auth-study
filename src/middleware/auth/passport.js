@@ -12,7 +12,7 @@ const params = {
 const strategy = new Strategy(params, async (payload, done) => {
   try {
     const user = await database("users")
-      .where(payload.id)
+      .where({ id: payload.id })
       .first();
     if (user) {
       done(null, { ...payload });
