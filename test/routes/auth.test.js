@@ -30,8 +30,6 @@ describe("Auth route behavior", () => {
       .post("/auth/signin")
       .send({ email, password: "12345" });
 
-    console.log(body);
-
     expect(status).toBe(200);
     expect(body).toHaveProperty("token");
   });
