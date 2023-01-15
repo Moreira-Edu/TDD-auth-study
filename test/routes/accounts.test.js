@@ -25,7 +25,7 @@ describe("account route behavior", () => {
   test("should register a new account successfully", async () => {
     const { status, body } = await agent.post(BASE_URL)
       .set("authorization", `bearer ${user.token}`)
-      .send({ name: "Acc #1", user_id: user.id });
+      .send({ name: "Acc #1" });
 
     expect(status).toBe(201);
     expect(body.name).toBe("Acc #1");
@@ -34,7 +34,7 @@ describe("account route behavior", () => {
   test("should not register a new account without name", async () => {
     const { status, body } = await agent.post(BASE_URL)
       .set("authorization", `bearer ${user.token}`)
-      .send({ user_id: user.id });
+      .send({});
 
     expect(status).toBe(400);
     expect(body.error).toBe("Nome é um atributo obrigatório");
