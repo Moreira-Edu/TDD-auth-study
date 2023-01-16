@@ -1,4 +1,5 @@
 import { Router } from "express";
+import AccountValidationController from "../middleware/Validation/AccountValidationController.js";
 import {
   CreateAccountController,
   DeleteAccountController,
@@ -13,10 +14,12 @@ const getAccounts = new GetAccountsController();
 const getAccount = new GetAccountController();
 const updateAccount = new UpdateAccountController();
 const deleteAccount = new DeleteAccountController();
+const accountValidation = new AccountValidationController();
 
 accountRoutes
   .post("/", createAccount.handle)
   .get("/", getAccounts.handle)
+  .param("id", accountValidation.handle)
   .get("/:id", getAccount.handle)
   .put("/:id", updateAccount.handle)
   .delete("/:id", deleteAccount.handle);
