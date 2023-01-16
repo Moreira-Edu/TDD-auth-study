@@ -13,7 +13,7 @@ class CreateAccountController {
       const account = await createAccount
         .execute({ name, user_id: id });
 
-      res.status(201).json(account[0]);
+      return res.status(201).json(account[0]);
     } catch (error) {
       next(error);
     }

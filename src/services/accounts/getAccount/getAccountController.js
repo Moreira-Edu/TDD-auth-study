@@ -8,7 +8,7 @@ class GetAccountController {
       const getAccount = new GetAccountUseCase();
       const account = await getAccount.execute({ id });
 
-      res.status(200).json(account);
+      return res.status(200).json(account);
     } catch (error) {
       next(error);
     }

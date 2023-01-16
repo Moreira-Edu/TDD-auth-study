@@ -13,9 +13,9 @@ class AccountValidationController {
 
       if (account.user_id !== userId) {
         throw new AppError("Não autorizado", 403);
+      } else {
+        next();
       }
-
-      next();
     } catch (error) {
       next(error);
     }

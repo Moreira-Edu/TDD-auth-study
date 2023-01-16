@@ -12,7 +12,7 @@ class UpdateAccountController {
       await accountValidation.execute(name, userId);
       const account = await updateAccount.execute({ id, name });
 
-      res.status(200).json(account[0]);
+      return res.status(200).json(account[0]);
     } catch (error) {
       next(error);
     }

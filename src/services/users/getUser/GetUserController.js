@@ -8,7 +8,7 @@ class GetUserController {
       const getUser = new GetUserUseCase();
       const user = await getUser.execute(id);
 
-      res.status(200).json(user);
+      return res.status(200).json(user);
     } catch (error) {
       next(error);
     }

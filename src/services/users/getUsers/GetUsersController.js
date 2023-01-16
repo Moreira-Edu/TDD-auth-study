@@ -7,7 +7,7 @@ class GetUsersController {
     try {
       const users = await getUsers.execute();
 
-      res.status(200).json(users);
+      return res.status(200).json(users);
     } catch (error) {
       next(error);
     }

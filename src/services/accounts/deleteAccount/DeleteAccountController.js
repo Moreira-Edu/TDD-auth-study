@@ -8,7 +8,7 @@ class DeleteAccountController {
       const deleteAccount = new DeleteAccountUseCase();
       await deleteAccount.execute({ id });
 
-      res.status(204).send();
+      return res.status(204).send();
     } catch (error) {
       next(error);
     }

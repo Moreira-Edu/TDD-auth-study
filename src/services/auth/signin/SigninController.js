@@ -7,7 +7,8 @@ class SigninController {
     const signinUseCase = new SigninUseCase();
     try {
       const token = await signinUseCase.execute(email, password);
-      res.status(200).json({ token });
+
+      return res.status(200).json({ token });
     } catch (error) {
       next(error);
     }

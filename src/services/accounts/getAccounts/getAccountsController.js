@@ -7,7 +7,7 @@ class GetAccountsController {
       const getAccount = new GetAccountsUseCase();
       const accounts = await getAccount.execute(id);
 
-      res.status(200).json(accounts);
+      return res.status(200).json(accounts);
     } catch (error) {
       next(error);
     }
