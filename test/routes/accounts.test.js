@@ -81,9 +81,13 @@ describe("account route behavior", () => {
 
   test("should get a list by ID", async () => {
     const acc = await database("accounts")
-      .insert({ name: "Acc by id", user_id: user.id }, ["id"]);
+      .insert(
+        { name: "Acc by id", user_id: user.id },
+        ["id"],
+      );
 
-    const { status, body } = await agent.get(`${BASE_URL}/${acc[0].id}`)
+    const { status, body } = await agent
+      .get(`${BASE_URL}/${acc[0].id}`)
       .set("authorization", `bearer ${user.token}`);
 
     expect(status).toBe(200);
@@ -91,13 +95,33 @@ describe("account route behavior", () => {
     expect(body.user_id).toBe(user.id);
   });
 
-  test.todo("should not get an account of another user");
+  test("should not get an account of another user",
+    async () => {
+      const acc = await database("accounts")
+        .insert(
+          { name: "Acc users #2", user_id: user2.id },
+          ["id"],
+        );
+      const { body, status } = await agent
+        .get(`${BASE_URL}/${acc[0].id}`)
+        .set("authorization", `bearer ${user.token}`);
+
+      expect(status).toBe(403);
+      expect(body.error).toBe("Não autorizado");
+    });
 
   test("should update an account", async () => {
     const acc = await database("accounts")
-      .insert({ name: "Acc to update", user_id: user.id }, ["id"]);
+      .insert(
+        {
+          name: "Acc to update",
+          user_id: user.id,
+        },
+        ["id"],
+      );
 
-    const { status, body } = await agent.put(`${BASE_URL}/${acc[0].id}`)
+    const { status, body } = await agent
+      .put(`${BASE_URL}/${acc[0].id}`)
       .set("authorization", `bearer ${user.token}`)
       .send({ name: "Acc updated" });
 
@@ -105,15 +129,45 @@ describe("account route behavior", () => {
     expect(body.name).toBe("Acc updated");
   });
 
-  test.todo("should not update an account of another user");
+  test("should not update an account of another user",
+    async () => {
+      const acc = await database("accounts")
+        .insert(
+          { name: "Acc users #2", user_id: user2.id },
+          ["id"],
+        );
+      const { body, status } = await agent
+        .put(`${BASE_URL}/${acc[0].id}`)
+        .send({ name: "Acc updated" })
+        .set("authorization", `bearer ${user.token}`);
+
+      expect(status).toBe(403);
+      expect(body.error).toBe("Não autorizado");
+    });
 
   test("should delete an account", async () => {
     const acc = await database("accounts")
       .insert({ name: "Acc to update", user_id: user.id }, ["id"]);
 
-    const { status } = await agent.delete(`${BASE_URL}/${acc[0].id}`)
+    const { status } = await agent
+      .delete(`${BASE_URL}/${acc[0].id}`)
       .set("authorization", `bearer ${user.token}`);
 
     expect(status).toBe(204);
   });
+
+  test("should not delete an account of another user",
+    async () => {
+      const acc = await database("accounts")
+        .insert(
+          { name: "Acc users #2", user_id: user2.id },
+          ["id"],
+        );
+      const { body, status } = await agent
+        .delete(`${BASE_URL}/${acc[0].id}`)
+        .set("authorization", `bearer ${user.token}`);
+
+      expect(status).toBe(403);
+      expect(body.error).toBe("Não autorizado");
+    });
 });
