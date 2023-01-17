@@ -66,4 +66,19 @@ describe("transactions route behavior", () => {
     expect(body).toHaveLength(1);
     expect(body[0].description).toBe("T1");
   });
+
+  test("should register a transaction", async () => {
+    const { status, body } = await agent.post(BASE_URL)
+      .send({
+        description: "new T",
+        date: new Date(),
+        amount: 330,
+        type: "I",
+        acc_id: accUser.id,
+      })
+      .set("authorization", `bearer ${user.token}`);
+
+    expect(status).toBe(200);
+    expect(body[0].description).toBe("new T");
+  });
 });
