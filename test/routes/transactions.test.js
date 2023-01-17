@@ -64,6 +64,6 @@ describe("transactions route behavior", () => {
 
     expect(status).toBe(200);
     expect(body).toHaveLength(1);
-    expect(body.description).toBe("T1");
+    expect(body[0].description).toBe("T1");
   });
 });
