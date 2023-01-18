@@ -98,4 +98,22 @@ describe("transactions route behavior", () => {
     expect(status).toBe(200);
     expect(body.description).toBe("T by ID");
   });
+
+  test("should update a transaction by ID", async () => {
+    const transaction = await database("transactions")
+      .insert({
+        description: "T to update",
+        date: new Date(),
+        amount: 470,
+        type: "I",
+        acc_id: accUser.id,
+      }, "*");
+
+    const { body, status } = await agent.put(`${BASE_URL}/${transaction[0].id}`)
+      .set("authorization", `bearer ${user.token}`)
+      .send({ type: "O" });
+
+    expect(status).toBe(200);
+    expect(body[0].type).toBe("O");
+  });
 });
