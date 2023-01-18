@@ -99,7 +99,7 @@ describe("transactions route behavior", () => {
     expect(body.description).toBe("T by ID");
   });
 
-  test("should update a transaction by ID", async () => {
+  test("should update a transaction", async () => {
     const transaction = await database("transactions")
       .insert({
         description: "T to update",
@@ -115,5 +115,21 @@ describe("transactions route behavior", () => {
 
     expect(status).toBe(200);
     expect(body[0].type).toBe("O");
+  });
+
+  test("should delete a transaction", async () => {
+    const transaction = await database("transactions")
+      .insert({
+        description: "T to update",
+        date: new Date(),
+        amount: 470,
+        type: "I",
+        acc_id: accUser.id,
+      }, "*");
+
+    const { status } = await agent.delete(`${BASE_URL}/${transaction[0].id}`)
+      .set("authorization", `bearer ${user.token}`);
+
+    expect(status).toBe(204);
   });
 });
