@@ -6,6 +6,11 @@ class CreateTransactionsController {
     const createTransaction = new CreateTransactionsUseCase();
 
     try {
+      if ((newTransaction.type === "I" && newTransaction.amount < 0)
+        || (newTransaction.type === "O" && newTransaction.amount > 0)) {
+        newTransaction.amount *= -1;
+      }
+
       const transaction = await createTransaction
         .execute(newTransaction);
 

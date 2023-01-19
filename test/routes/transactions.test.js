@@ -82,6 +82,38 @@ describe("transactions route behavior", () => {
     expect(body[0].description).toBe("new T");
   });
 
+  test("Incoming transactions should convert to a positive value",
+    async () => {
+      const { status, body } = await agent.post(BASE_URL)
+        .send({
+          description: "new T",
+          date: new Date(),
+          amount: -330,
+          type: "I",
+          acc_id: accUser.id,
+        })
+        .set("authorization", `bearer ${user.token}`);
+
+      expect(status).toBe(200);
+      expect(body[0].amount).toBe("330.00");
+    });
+
+  test("Outgoing transactions should convert to a negative value",
+    async () => {
+      const { status, body } = await agent.post(BASE_URL)
+        .send({
+          description: "new T",
+          date: new Date(),
+          amount: 330,
+          type: "O",
+          acc_id: accUser.id,
+        })
+        .set("authorization", `bearer ${user.token}`);
+
+      expect(status).toBe(200);
+      expect(body[0].amount).toBe("-330.00");
+    });
+
   test("should get a transaction by ID", async () => {
     const transaction = await database("transactions")
       .insert({
@@ -127,9 +159,28 @@ describe("transactions route behavior", () => {
         acc_id: accUser.id,
       }, "*");
 
-    const { status } = await agent.delete(`${BASE_URL}/${transaction[0].id}`)
+    const { status } = await agent
+      .delete(`${BASE_URL}/${transaction[0].id}`)
       .set("authorization", `bearer ${user.token}`);
 
     expect(status).toBe(204);
+  });
+
+  test("should delete a transaction", async () => {
+    const transaction = await database("transactions")
+      .insert({
+        description: "T to update",
+        date: new Date(),
+        amount: 470,
+        type: "I",
+        acc_id: accUser2.id,
+      }, "*");
+
+    const { status, body } = await agent
+      .delete(`${BASE_URL}/${transaction[0].id}`)
+      .set("authorization", `bearer ${user.token}`);
+
+    expect(status).toBe(403);
+    expect(body.error).toBe("Não autorizado");
   });
 });
