@@ -82,6 +82,91 @@ describe("transactions route behavior", () => {
     expect(body[0].description).toBe("new T");
   });
 
+  test("should not register a transaction without description",
+    async () => {
+      const { body, status } = await agent.post(BASE_URL)
+        .send({
+          date: new Date(),
+          amount: 330,
+          type: "I",
+          acc_id: accUser.id,
+        }).set("authorization", `bearer ${user.token}`);
+
+      expect(body.error).toBe("Descrição é um atributo obrigatório");
+      expect(status).toBe(400);
+    });
+
+  test("should not register a transaction without amount",
+    async () => {
+      const { body, status } = await agent.post(BASE_URL)
+        .send({
+          description: "new T",
+          date: new Date(),
+          type: "I",
+          acc_id: accUser.id,
+        }).set("authorization", `bearer ${user.token}`);
+
+      expect(body.error).toBe("Valor é um atributo obrigatório");
+      expect(status).toBe(400);
+    });
+
+  test("should not register a transaction without date",
+    async () => {
+      const { body, status } = await agent.post(BASE_URL)
+        .send({
+          description: "new T",
+          amount: 330,
+          type: "I",
+          acc_id: accUser.id,
+        }).set("authorization", `bearer ${user.token}`);
+
+      expect(body.error).toBe("Data é um atributo obrigatório");
+      expect(status).toBe(400);
+    });
+
+  test("should not register a transaction without account",
+    async () => {
+      const { body, status } = await agent.post(BASE_URL)
+        .send({
+          description: "new T",
+          date: new Date(),
+          amount: 330,
+          type: "I",
+        }).set("authorization", `bearer ${user.token}`);
+
+      expect(body.error).toBe("ID da conta é um atributo obrigatório");
+      expect(status).toBe(400);
+    });
+
+  test("should not register a transaction without type",
+    async () => {
+      const { body, status } = await agent.post(BASE_URL)
+        .send({
+          description: "new T",
+          date: new Date(),
+          amount: 330,
+          acc_id: accUser.id,
+        }).set("authorization", `bearer ${user.token}`);
+
+      expect(body.error).toBe("Tipo de transação é um atributo obrigatório");
+      expect(status).toBe(400);
+    });
+
+  test("should not register a transaction with a invalid type",
+    async () => {
+      const { body, status } = await agent.post(BASE_URL)
+        .send({
+          description: "new T",
+          date: new Date(),
+          amount: 330,
+          type: "E",
+          acc_id: accUser.id,
+        }).set("authorization", `bearer ${user.token}`);
+
+      expect(body.error).toBe("Tipo de transação inválida");
+      expect(status).toBe(400);
+    });
+
   test("Incoming transactions should convert to a positive value",
     async () => {
       const { status, body } = await agent.post(BASE_URL)
@@ -124,7 +209,8 @@ describe("transactions route behavior", () => {
         acc_id: accUser.id,
       }, "*");
 
-    const { body, status } = await agent.get(`${BASE_URL}/${transaction[0].id}`)
+    const { body, status } = await agent
+      .get(`${BASE_URL}/${transaction[0].id}`)
       .set("authorization", `bearer ${user.token}`);
 
     expect(status).toBe(200);
@@ -141,7 +227,8 @@ describe("transactions route behavior", () => {
         acc_id: accUser.id,
       }, "*");
 
-    const { body, status } = await agent.put(`${BASE_URL}/${transaction[0].id}`)
+    const { body, status } = await agent
+      .put(`${BASE_URL}/${transaction[0].id}`)
       .set("authorization", `bearer ${user.token}`)
       .send({ type: "O" });
 
@@ -166,21 +253,22 @@ describe("transactions route behavior", () => {
     expect(status).toBe(204);
   });
 
-  test("should delete a transaction", async () => {
-    const transaction = await database("transactions")
-      .insert({
-        description: "T to update",
-        date: new Date(),
-        amount: 470,
-        type: "I",
-        acc_id: accUser2.id,
-      }, "*");
+  test("should not delete a transaction of another user",
+    async () => {
+      const transaction = await database("transactions")
+        .insert({
+          description: "T to update",
+          date: new Date(),
+          amount: 470,
+          type: "I",
+          acc_id: accUser2.id,
+        }, "*");
 
-    const { status, body } = await agent
-      .delete(`${BASE_URL}/${transaction[0].id}`)
-      .set("authorization", `bearer ${user.token}`);
+      const { status, body } = await agent
+        .delete(`${BASE_URL}/${transaction[0].id}`)
+        .set("authorization", `bearer ${user.token}`);
 
-    expect(status).toBe(403);
-    expect(body.error).toBe("Não autorizado");
-  });
+      expect(status).toBe(403);
+      expect(body.error).toBe("Não autorizado");
+    });
 });

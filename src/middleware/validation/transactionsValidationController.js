@@ -14,7 +14,6 @@ class TransactionValidationController {
       if (result.length <= 0) throw new AppError("Não autorizado", 403);
       next();
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
