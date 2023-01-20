@@ -7,7 +7,7 @@ class DeleteTransactionsController {
 
     try {
       await deleteTransactions.execute(id);
-      res.status(204).send();
+      return res.status(204).send();
     } catch (error) {
       next(error);
     }

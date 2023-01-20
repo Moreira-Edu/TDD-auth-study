@@ -8,7 +8,7 @@ class GetTransactionsController {
     try {
       const transactions = await getTransaction.execute(id);
 
-      res.status(200).json(transactions);
+      return res.status(200).json(transactions);
     } catch (error) {
       next(error);
     }

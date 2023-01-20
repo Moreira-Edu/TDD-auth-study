@@ -1,20 +1,21 @@
+import TransactionValidation from "../../../utils/validation/transactionValidation.js";
 import CreateTransactionsUseCase from "./CreateTransactionsUseCase.js";
 
 class CreateTransactionsController {
   async handle(req, res, next) {
     const newTransaction = req.body;
     const createTransaction = new CreateTransactionsUseCase();
+    const transactionValidation = new TransactionValidation();
 
     try {
-      if ((newTransaction.type === "I" && newTransaction.amount < 0)
-        || (newTransaction.type === "O" && newTransaction.amount > 0)) {
-        newTransaction.amount *= -1;
-      }
+      transactionValidation.execute(newTransaction);
+      newTransaction.amount = transactionValidation
+        .convertValues(newTransaction);
 
       const transaction = await createTransaction
         .execute(newTransaction);
 
-      res.status(200).json(transaction);
+      return res.status(200).json(transaction);
     } catch (error) {
       next(error);
     }

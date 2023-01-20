@@ -77,7 +77,7 @@ describe("transactions route behavior", () => {
         acc_id: accUser.id,
       })
       .set("authorization", `bearer ${user.token}`);
-
+    console.log(body.error);
     expect(status).toBe(200);
     expect(body[0].description).toBe("new T");
   });
