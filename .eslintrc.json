@@ -19,7 +19,7 @@
             "error",
             "always"
         ],
-        "no-console": "off",
+        "no-console": "warn",
         "class-methods-use-this": "off",
         "consistent-return": "off",
         "camelcase": "off"

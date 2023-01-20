@@ -77,7 +77,6 @@ describe("transactions route behavior", () => {
         acc_id: accUser.id,
       })
       .set("authorization", `bearer ${user.token}`);
-    console.log(body.error);
     expect(status).toBe(200);
     expect(body[0].description).toBe("new T");
   });
@@ -270,5 +269,23 @@ describe("transactions route behavior", () => {
 
       expect(status).toBe(403);
       expect(body.error).toBe("Não autorizado");
+    });
+
+  test("should delete accounts with transaction",
+    async () => {
+      const transaction = await database("transactions")
+        .insert({
+          description: "T to update",
+          date: new Date(),
+          amount: 470,
+          type: "I",
+          acc_id: accUser.id,
+        }, "*");
+
+      const { status, body } = await agent
+        .delete(`/accounts/${accUser.id}`)
+        .set("authorization", `bearer ${user.token}`);
+      expect(body.error).toBe("Esta conta possui transações associadas");
+      expect(status).toBe(400);
     });
 });
