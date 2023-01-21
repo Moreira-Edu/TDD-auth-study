@@ -17,6 +17,9 @@ const development = {
   migrations: {
     directory: "src/database/migrations",
   },
+  seeds: {
+    directory: "src/database/seeds",
+  },
 };
 
 export default development;
