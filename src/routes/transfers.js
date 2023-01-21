@@ -1,10 +1,15 @@
 import { Router } from "express";
-import GetTransfersController from "../services/transfers/transfersServices.js";
+import {
+  GetTransfersController,
+  CreateTransfersController,
+} from "../services/transfers/transfersServices.js";
 
 const transfersRoute = Router();
 const getTransfers = new GetTransfersController();
+const createTransfer = new CreateTransfersController();
 
 transfersRoute
-  .get("/", getTransfers.handle);
+  .get("/", getTransfers.handle)
+  .post("/", createTransfer.handle);
 
 export default transfersRoute;

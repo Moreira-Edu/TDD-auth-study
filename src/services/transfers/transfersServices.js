@@ -1,3 +1,7 @@
 import GetTransfersController from "./getTransfers/GetTransfersController.js";
+import CreateTransfersController from "./createTransfers/CreateTransfersController.js";
 
-export default GetTransfersController;
+export {
+  GetTransfersController,
+  CreateTransfersController,
+};

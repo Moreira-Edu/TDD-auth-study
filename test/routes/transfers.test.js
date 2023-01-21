@@ -18,4 +18,20 @@ describe("Transfer route behavior", () => {
     expect(body.length).toBe(1);
     expect(body[0].description).toBe("Transfer user 1");
   });
+
+  test("should register a transfer", async () => {
+    const { body, status } = await agent.post(BASE_URL)
+      .set("authorization", `bearer ${TOKEN}`)
+      .send({
+        description: "Regular transfer",
+        user_id: 10000,
+        acc_origin_id: 10000,
+        acc_destiny_id: 10001,
+        amount: 100,
+        date: new Date(),
+      });
+
+    expect(status).toBe(200);
+    expect(body[0].description).toBe("Regular transfer");
+  });
 });
