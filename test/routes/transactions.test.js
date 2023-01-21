@@ -285,6 +285,7 @@ describe("transactions route behavior", () => {
       const { status, body } = await agent
         .delete(`/accounts/${accUser.id}`)
         .set("authorization", `bearer ${user.token}`);
+
       expect(body.error).toBe("Esta conta possui transações associadas");
       expect(status).toBe(400);
     });
