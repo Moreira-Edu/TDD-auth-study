@@ -15,6 +15,7 @@ describe("transactions route behavior", () => {
 
   beforeAll(async () => {
     await database("transactions").del();
+    await database("transfers").del();
     await database("accounts").del();
     await database("users").del();
 
