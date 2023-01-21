@@ -20,6 +20,27 @@ class CreateTransfersUseCase {
       date,
     }, "*");
 
+    const transactions = [
+      {
+        description: `Transfer from origin acc ${newTransfer[0].acc_origin_id}`,
+        date: newTransfer[0].date,
+        amount: newTransfer[0].amount * -1,
+        type: "O",
+        acc_id: newTransfer[0].acc_origin_id,
+        transfer_id: newTransfer[0].id,
+      },
+      {
+        description: `Transfer to destiny acc ${newTransfer[0].acc_destiny_id}`,
+        date: newTransfer[0].date,
+        amount: newTransfer[0].amount,
+        type: "I",
+        acc_id: newTransfer[0].acc_destiny_id,
+        transfer_id: newTransfer[0].id,
+      },
+    ];
+    await database("transactions")
+      .insert(transactions);
+
     return newTransfer;
   }
 }

@@ -33,5 +33,16 @@ describe("Transfer route behavior", () => {
 
     expect(status).toBe(200);
     expect(body[0].description).toBe("Regular transfer");
+
+    const transactions = await database("transactions")
+      .where({ transfer_id: body[0].id }).select();
+
+    expect(transactions).toHaveLength(2);
+    expect(transactions[0].description).toBe("Transfer from origin acc 10000");
+    expect(transactions[1].description).toBe("Transfer to destiny acc 10001");
+    expect(transactions[0].amount).toBe("-100.00");
+    expect(transactions[1].amount).toBe("100.00");
+    expect(transactions[0].acc_id).toBe(10000);
+    expect(transactions[1].acc_id).toBe(10001);
   });
 });
