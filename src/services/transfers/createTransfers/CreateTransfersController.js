@@ -7,7 +7,7 @@ class CreateTransfersController {
 
     try {
       const newTransfers = await createTransfer.execute({ ...req.body, user_id: id });
-      return res.status(200).json(newTransfers);
+      return res.status(201).json(newTransfers);
     } catch (error) {
       next(error);
     }
