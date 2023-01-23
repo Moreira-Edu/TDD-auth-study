@@ -73,4 +73,134 @@ describe("Transfer route behavior", () => {
         expect(outgoing.transfer_id).toBe(transferId);
       });
   });
+
+  describe("If register a invalid transfer it should...", () => {
+    test("should not register a transfer without description",
+      async () => {
+        const { body, status } = await agent.post(BASE_URL)
+          .set("authorization", `bearer ${TOKEN}`)
+          .send(
+            {
+              user_id: 10000,
+              acc_origin_id: 10000,
+              acc_destiny_id: 10001,
+              amount: 100,
+              date: new Date(),
+            },
+          );
+
+        expect(status).toBe(400);
+        expect(body.error).toBe("Descrição é um atributo obrigatório");
+      });
+
+    test("should not register a transfer without amount",
+      async () => {
+        const { body, status } = await agent.post(BASE_URL)
+          .set("authorization", `bearer ${TOKEN}`)
+          .send(
+            {
+              description: "Regular transfer",
+              user_id: 10000,
+              acc_origin_id: 10000,
+              acc_destiny_id: 10001,
+              date: new Date(),
+            },
+          );
+
+        expect(status).toBe(400);
+        expect(body.error).toBe("Valor da transferência é um atributo obrigatório");
+      });
+
+    test("should not register a transfer without date",
+      async () => {
+        const { body, status } = await agent.post(BASE_URL)
+          .set("authorization", `bearer ${TOKEN}`)
+          .send(
+            {
+              description: "Regular transfer",
+              user_id: 10000,
+              acc_origin_id: 10000,
+              acc_destiny_id: 10001,
+              amount: 100,
+            },
+          );
+
+        expect(status).toBe(400);
+        expect(body.error).toBe("Data da transferência é um atributo obrigatório");
+      });
+
+    test("should not register a transfer without origin account",
+      async () => {
+        const { body, status } = await agent.post(BASE_URL)
+          .set("authorization", `bearer ${TOKEN}`)
+          .send(
+            {
+              description: "Regular transfer",
+              user_id: 10000,
+              acc_destiny_id: 10001,
+              amount: 100,
+              date: new Date(),
+            },
+          );
+
+        expect(status).toBe(400);
+        expect(body.error).toBe("ID da conta de origem é um atributo obrigatório");
+      });
+
+    test("should not register a transfer without destiny account",
+      async () => {
+        const { body, status } = await agent.post(BASE_URL)
+          .set("authorization", `bearer ${TOKEN}`)
+          .send(
+            {
+              description: "Regular transfer",
+              user_id: 10000,
+              acc_origin_id: 10000,
+              amount: 100,
+              date: new Date(),
+            },
+          );
+
+        expect(status).toBe(400);
+        expect(body.error).toBe("ID da conta destino é um atributo obrigatório");
+      });
+
+    test("should not register a transfer if origin and destiny acc are equal",
+      async () => {
+        const { body, status } = await agent.post(BASE_URL)
+          .set("authorization", `bearer ${TOKEN}`)
+          .send(
+            {
+              description: "Regular transfer",
+              user_id: 10000,
+              acc_origin_id: 10000,
+              acc_destiny_id: 10000,
+              amount: 100,
+              date: new Date(),
+            },
+          );
+
+        expect(status).toBe(400);
+        expect(body.error).toBe("Não é possível transferir para a mesma conta");
+      });
+
+    test("should not register a transfer of another user",
+      async () => {
+        const { body, status } = await agent.post(BASE_URL)
+          .set("authorization", `bearer ${TOKEN}`)
+          .send(
+            {
+              description: "Regular transfer",
+              user_id: 10000,
+              acc_origin_id: 20000,
+              acc_destiny_id: 10001,
+              amount: 100,
+              date: new Date(),
+            },
+          );
+
+        expect(status).toBe(400);
+        expect(body.error).toBe("Conta não pertence ao usuário");
+      });
+  });
 });
