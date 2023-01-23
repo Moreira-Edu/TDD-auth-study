@@ -203,4 +203,12 @@ describe("Transfer route behavior", () => {
         expect(body.error).toBe("Conta não pertence ao usuário");
       });
   });
+
+  test("should get a transfer by ID", async () => {
+    const { body, status } = await agent.get(`${BASE_URL}/10000`)
+      .set("authorization", `bearer ${TOKEN}`);
+
+    expect(body.description).toBe("Transfer user 1");
+    expect(status).toBe(200);
+  });
 });
