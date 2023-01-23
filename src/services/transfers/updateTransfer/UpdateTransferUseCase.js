@@ -1,24 +1,12 @@
 import database from "../../../database/index.js";
 
-class CreateTransfersUseCase {
-  async execute(
-    {
-      description,
-      user_id,
-      acc_origin_id,
-      acc_destiny_id,
-      amount,
-      date,
-    },
-  ) {
-    const [newTransfer] = await database("transfers").insert({
-      description,
-      user_id,
-      acc_origin_id,
-      acc_destiny_id,
-      amount,
-      date,
-    }, "*");
+class UpdateTransferUseCase {
+  async execute(id, values = {}) {
+    await database("transactions")
+      .where({ transfer_id: id }).del();
+
+    const [newTransfer] = await database("transfers")
+      .where({ id }).update(values, "*");
 
     const transactions = [
       {
@@ -27,7 +15,7 @@ class CreateTransfersUseCase {
         amount: newTransfer.amount * -1,
         type: "O",
         acc_id: newTransfer.acc_origin_id,
-        transfer_id: newTransfer.id,
+        transfer_id: id,
       },
       {
         description: `Transfer to destiny acc ${newTransfer.acc_destiny_id}`,
@@ -35,14 +23,14 @@ class CreateTransfersUseCase {
         amount: newTransfer.amount,
         type: "I",
         acc_id: newTransfer.acc_destiny_id,
-        transfer_id: newTransfer.id,
+        transfer_id: id,
       },
     ];
-    await database("transactions")
-      .insert(transactions);
+
+    await database("transactions").insert(transactions);
 
     return newTransfer;
   }
 }
 
-export default CreateTransfersUseCase;
+export default UpdateTransferUseCase;
