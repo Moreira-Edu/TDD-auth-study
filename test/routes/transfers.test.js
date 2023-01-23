@@ -266,4 +266,27 @@ describe("Transfer route behavior", () => {
         expect(outgoing.transfer_id).toBe(transferId);
       });
   });
+
+  describe("When delete transfers...", () => {
+    test("should return status code 204", async () => {
+      const { status } = await agent.delete(`${BASE_URL}/10000`)
+        .set("authorization", `bearer ${TOKEN}`);
+
+      expect(status).toBe(204);
+    });
+
+    test("should be removed from database", async () => {
+      const transferExists = await database("transfers")
+        .where({ id: 10000 });
+
+      expect(transferExists).toHaveLength(0);
+    });
+
+    test("should delete associate transactions", async () => {
+      const transactionsExists = await database("transactions")
+        .where({ transfer_id: 10000 });
+
+      expect(transactionsExists).toHaveLength(0);
+    });
+  });
 });
