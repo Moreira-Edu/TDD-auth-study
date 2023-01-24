@@ -289,4 +289,12 @@ describe("Transfer route behavior", () => {
       expect(transactionsExists).toHaveLength(0);
     });
   });
+
+  test("should not get transfers of another user", async () => {
+    const { body, status } = await agent.get(`${BASE_URL}/20000`)
+      .set("authorization", `bearer ${TOKEN}`);
+
+    expect(status).toBe(403);
+    expect(body.error).toBe("Não autorizado");
+  });
 });
