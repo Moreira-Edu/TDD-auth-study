@@ -5,10 +5,6 @@
  */
 export async function seed(knex) {
   return Promise.all([
-    await knex("transactions").del(),
-    await knex("transfers").del(),
-    await knex("accounts").del(),
-    await knex("users").del(),
 
     await knex("users").insert([
       {
