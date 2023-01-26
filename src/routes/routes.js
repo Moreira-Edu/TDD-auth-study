@@ -5,6 +5,7 @@ import userRoute from "./users.js";
 import passport from "../middleware/auth/passport.js";
 import transactionRoute from "./transactions.js";
 import transfersRoute from "./transfers.js";
+import balanceRoute from "./balance.js";
 
 const routes = Router();
 
@@ -14,6 +15,7 @@ routes
   .use("/users", userRoute)
   .use("/accounts", accountRoutes)
   .use("/transfers", transfersRoute)
-  .use("/transactions", transactionRoute);
+  .use("/transactions", transactionRoute)
+  .use("/balance", balanceRoute);
 
 export default routes;

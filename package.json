@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "secure-mode": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "lint": "eslint test/** src/**  --fix"
   },

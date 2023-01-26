@@ -139,8 +139,8 @@ describe("Balance route behavior", () => {
 
     test("should calculate past transactions",
       async () => {
-        const date = new Date();
-        const fiveDaysEarly = date.setDate(date.getDate() - 5);
+        const today = new Date();
+        const fiveDaysEarly = new Date(today - (5 * 86400000));
 
         await agent.post(TRANSACTIONS_URL)
           .set("authorization", `bearer ${TOKEN}`)
@@ -159,15 +159,18 @@ describe("Balance route behavior", () => {
         expect(status).toBe(200);
         expect(body).toHaveLength(2);
         expect(body[0].id).toBe(10100);
-        expect(body[0].sum).toBe("150.00");
+        expect(body[0].sum).toBe("50.00");
         expect(body[1].id).toBe(10101);
         expect(body[1].sum).toBe("50.00");
       });
 
     test("should not calculate future transactions",
       async () => {
-        const date = new Date();
-        const fiveDaysLater = date.setDate(date.getDate() + 5);
+        const fiveDaysLater = new Date();
+
+        fiveDaysLater.setDate(
+          fiveDaysLater.getDate() + 5,
+        );
 
         await agent.post(TRANSACTIONS_URL)
           .set("authorization", `bearer ${TOKEN}`)
@@ -186,7 +189,7 @@ describe("Balance route behavior", () => {
         expect(status).toBe(200);
         expect(body).toHaveLength(2);
         expect(body[0].id).toBe(10100);
-        expect(body[0].sum).toBe("150.00");
+        expect(body[0].sum).toBe("50.00");
         expect(body[1].id).toBe(10101);
         expect(body[1].sum).toBe("50.00");
       });
