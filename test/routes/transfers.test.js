@@ -73,6 +73,12 @@ describe("Transfer route behavior", () => {
         expect(incoming.transfer_id).toBe(transferId);
         expect(outgoing.transfer_id).toBe(transferId);
       });
+
+    test("Both transactions should have done status",
+      () => {
+        expect(incoming.status).toBe(true);
+        expect(outgoing.status).toBe(true);
+      });
   });
 
   describe("If register a invalid transfer it should...", () => {

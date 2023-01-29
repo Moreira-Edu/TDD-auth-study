@@ -19,7 +19,6 @@ class TransferValidation {
 
     const accounts = await database("accounts")
       .whereIn("id", [acc_destiny_id, acc_origin_id]);
-
     accounts.forEach((acc) => {
       if (acc.user_id !== user_id) throw new AppError("Conta não pertence ao usuário");
     });

@@ -28,6 +28,7 @@ class CreateTransfersUseCase {
         type: "O",
         acc_id: newTransfer.acc_origin_id,
         transfer_id: newTransfer.id,
+        status: true,
       },
       {
         description: `Transfer to destiny acc ${newTransfer.acc_destiny_id}`,
@@ -36,6 +37,7 @@ class CreateTransfersUseCase {
         type: "I",
         acc_id: newTransfer.acc_destiny_id,
         transfer_id: newTransfer.id,
+        status: true,
       },
     ];
     await database("transactions")
