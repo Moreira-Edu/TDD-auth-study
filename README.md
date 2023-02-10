@@ -134,7 +134,7 @@ Rotas utilizadas pela aplicação web para executar metodos de **POST** e **GET*
 }
 ```
 
-- ### _Transactions_
+- ### _Transfers_
 
 ```
 {
